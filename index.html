@@ -1,0 +1,93 @@
+<html style="height: 100%">
+<head>
+    <title>Random drawing</title>
+
+    <script>
+        /*
+            This program is Copyright 2021 James Brown
+
+            This program is free software: you can redistribute it and/or modify
+            it under the terms of the GNU General Public License as published by
+            the Free Software Foundation, either version 3 of the License, or
+            (at your option) any later version.
+
+            This program is distributed in the hope that it will be useful,
+            but WITHOUT ANY WARRANTY; without even the implied warranty of
+            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            GNU General Public License for more details.
+
+            You may obtain a copy of the GNU General Public License 3
+            from https://opensource.org/licenses/GPL-3.0
+        */
+        function Draw()
+        {
+            var input = document.getElementById("input");
+            var lines = input.value.split("\n");
+            // remove blank elements (or only whitespace)
+            lines = lines.filter(function(str) {
+                return /\S/.test(str);
+            });
+
+            if (lines.length < 1)
+            {
+                alert("No input. Add something to the input box");
+                input.value = "";
+                return;
+            }
+
+            var selectedLine = Math.floor(Math.random() * lines.length)
+
+            // update the ouptut field
+            var output = document.getElementById("output");
+            if (output.value.length == 0)
+                output.value = lines[selectedLine];
+            else
+                output.value = lines[selectedLine] + "\n" + output.value;
+
+            // remove one element
+            lines.splice(selectedLine, 1);
+
+            // update the input field
+            input.value = lines.join("\n");
+        }
+        function resizeTextArea()
+        {
+            //Wrap your form contents in a div and get its offset height
+            var heightOfHeader = document.getElementById('headerWrapper').offsetHeight;
+            //Get height of body (accounting for user-installed toolbars)
+            var heightOfBody = document.body.clientHeight;
+            var heightOfDiv = document.getElementById('containerDiv').offsetHeight;
+            var heightOfTextArea = document.getElementById('input').offsetHeight;
+            var buffer = 35; //Accounts for misc. padding, etc.
+            //Set the height of the textarea dynamically
+            document.getElementById('input').style.height =
+            document.getElementById('output').style.height =
+              (heightOfBody - heightOfHeader - (heightOfDiv - heightOfTextArea)) - buffer;
+            //NOTE: For extra panache, add onresize="resizeTextArea()" to the body
+        }
+    </script>
+</head>
+<body style="height: 100%" onload="resizeTextArea()" onresize="resizeTextArea()">
+    <div id="headerWrapper">
+        <h1>Random drawing</h1>
+        <p>Put items to be drawn, one per line, in the "input" field below.
+        Press the "draw" button to select an item at random and move it from
+        the input column to the top of the "selected" column. Items in the selected
+        column will be in reverse order (most recently drawn item at the top). Blank
+        input lines will be ignored. No data leaves your browser, this is all done
+        locally with javascript.
+        </p>
+    </div>
+    <div style="width: 100%; overflow: hidden;">
+        <div id="containerDiv" style="width: 50%; float: left;">
+            Input<br/>
+            <textarea style="width: 95%" autofocus id="input"></textarea><br/>
+            <button type="button" onclick="Draw()">Draw</button>
+        </div>
+        <div style="width: 50%; float:right;">
+            Selected<br/>
+            <textarea readonly style="width: 95%" id="output" rows="12"></textarea>
+        </div>
+    </div>
+</body>
+</html>
